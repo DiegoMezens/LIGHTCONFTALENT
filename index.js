@@ -3,9 +3,21 @@ const path = require("path");
 const { exec } = require("child_process");
 const readline = require("readline");
 
-const ROOT = "C:\\Temp\\getesteur\\Talent\\Fichier utilitaire";
-const EXE = "C:\\Temp\\getesteur\\Phoenix.exe";
-const PREFIX = "CONF_";
+// Charger la configuration depuis config.json
+const configPath = process.env.CONFIG_PATH || path.join(__dirname, "config.json");
+let config;
+
+try {
+  const configContent = fs.readFileSync(configPath, "utf8");
+  config = JSON.parse(configContent);
+} catch (err) {
+  console.error(`Erreur lors de la lecture de ${configPath}:`, err.message);
+  process.exit(1);
+}
+
+const ROOT = config.root;
+const EXE = config.exe;
+const PREFIX = config.prefix;
 
 const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
   .filter(d => d.isDirectory() && d.name.startsWith(PREFIX));
